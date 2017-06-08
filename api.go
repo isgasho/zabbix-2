@@ -1,0 +1,72 @@
+package zabbix
+
+import (
+	"bytes"
+	"encoding/json"
+	"io/ioutil"
+)
+
+const (
+	RPCVersion = "2.0"
+)
+
+// API makes JSON RPC requests to a zabbix API pointed at
+// by URL.
+type API struct {
+	AuthToken string
+	URL       string
+
+	Requester Requester
+	Logger    Logger
+}
+
+// NewAPI creates a default API object and sets the requester
+// to a http implementation
+func NewAPI(url string) *API {
+	api := &API{
+		URL: url,
+	}
+
+	api.Requester = new(HTTPRequester)
+	api.Logger = new(StdOutLogger)
+
+	return api
+}
+
+// Request makes a zabbix API call and returns its response.
+// the error isn't indicative of an API error, instead representing
+// and error during processing the parameters. For example, error
+// parsing JSON
+func (a *API) Request(action string, params map[string]interface{}) (*Response, error) {
+	request := Request{
+		Auth:    a.AuthToken,
+		ID:      1,
+		JsonRPC: RPCVersion,
+		Action:  action,
+		Params:  params,
+	}
+
+	requestData, err := json.Marshal(&request)
+	if err != nil {
+		return nil, err
+	}
+
+	requestReader := bytes.NewReader(requestData)
+	res, err := a.Requester.Post(a.URL, "application/json", requestReader)
+	if err != nil {
+		return nil, err
+	}
+
+	resData, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var response Response
+	err = json.Unmarshal(resData, &response)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response, nil
+}
