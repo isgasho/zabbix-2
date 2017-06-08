@@ -3,6 +3,7 @@ package zabbix
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 )
 
@@ -19,6 +20,8 @@ type API struct {
 
 	Requester Requester
 	Logger    Logger
+
+	idCount uint
 }
 
 // NewAPI creates a default API object and sets the requester
@@ -71,4 +74,34 @@ func (a *API) Request(action string, params map[string]interface{}) (*Response, 
 	}
 
 	return &response, nil
+}
+
+// GetID returns a new, sequentially generated zabbix
+// ID
+func (a *API) GetID() uint {
+	a.idCount++
+	return a.idCount
+}
+
+// Auth makes an authentication request to the zabbix
+// API with the supplied credentials. The token
+// sent back will be used for subsequent requests.
+func (a *API) Auth(username, password string) error {
+	res, err := a.Request("user.login", map[string]interface{}{
+		"user":     username,
+		"password": password,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	tok, ok := res.Result.(string)
+	if !ok {
+		return errors.New("Returned auth token is not a string")
+	}
+
+	a.AuthToken = tok
+
+	return nil
 }

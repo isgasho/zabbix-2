@@ -3,8 +3,8 @@ package zabbix
 // Response is a JsonRPC response as defined in
 // the JsonRPC spec.
 type Response struct {
-	JsonRPC string                 `json:"jsonrpc"`
-	Result  map[string]interface{} `json:"result"`
+	JsonRPC string      `json:"jsonrpc"`
+	Result  interface{} `json:"result"`
 	Error   Error
 }
 
