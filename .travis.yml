@@ -1,0 +1,9 @@
+language: go
+
+go:
+  - 1.8.x
+  - master
+
+install:
+  - go get -u -v
+  - go get github.com/stretchr/testify
