@@ -7,6 +7,7 @@ import (
 )
 
 const (
+	// RPCVersion is the RPC version to use
 	RPCVersion = "2.0"
 )
 
@@ -34,9 +35,10 @@ func NewAPI(url string) *API {
 }
 
 // Request makes a zabbix API call and returns its response.
-// the error isn't indicative of an API error, instead representing
-// and error during processing the parameters. For example, error
-// parsing JSON
+// The error isn't indicative of an API error, instead representing
+// and error during processing the parameters, for example, `error
+// parsing JSON`. For API specific errors, check the error object
+// as a part of the response
 func (a *API) Request(action string, params map[string]interface{}) (*Response, error) {
 	request := Request{
 		Auth:    a.AuthToken,
