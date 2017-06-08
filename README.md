@@ -1,7 +1,9 @@
-[![Build Status](https://travis-ci.org/Gman98ish/zabbix.svg?branch=master)](https://travis-ci.org/Gman98ish/zabbix)
-
-# Zabbix
+# Zabbix [![Build Status](https://travis-ci.org/Gman98ish/zabbix.svg?branch=master)](https://travis-ci.org/Gman98ish/zabbix)
 This library acts as a wrapper around the zabbix API
+
+# Notice
+This library is still under development, and is likely to undergo a lot of change until it reaches a more
+complete state
 
 ## Basic Usage
 ```go
