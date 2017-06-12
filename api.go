@@ -3,7 +3,6 @@ package zabbix
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"io/ioutil"
 )
 
@@ -100,9 +99,10 @@ func (a *API) Auth(username, password string) error {
 		return &res.Error
 	}
 
-	tok, ok := res.Result.(string)
-	if !ok {
-		return errors.New("Returned auth token is not a string")
+	var tok string
+	err = json.Unmarshal(res.Result, &tok)
+	if err != nil {
+		return err
 	}
 
 	a.AuthToken = tok

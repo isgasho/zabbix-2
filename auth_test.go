@@ -2,7 +2,6 @@ package zabbix
 
 import (
 	"bytes"
-	"encoding/json"
 	"io"
 	"net/http"
 	"testing"
@@ -19,16 +18,7 @@ type authTestRequester struct {
 func (atr *authTestRequester) Post(url, action string, data io.Reader) (*http.Response, error) {
 	atr.Body = data
 
-	response := &Response{
-		JsonRPC: "2.0",
-		Error:   Error{},
-		Result:  "abc123",
-	}
-
-	responseJson, err := json.Marshal(response)
-	if err != nil {
-		return nil, err
-	}
+	responseJson := []byte(`{"jsonrpc": "2.0", "result": "abc123"}`)
 
 	recorder := httptest.NewRecorder()
 	recorder.Body = bytes.NewBuffer(responseJson)
