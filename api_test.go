@@ -60,7 +60,7 @@ func TestRequestFormat(t *testing.T) {
 	}
 
 	assert.Equal(RPCVersion, request.JsonRPC, "JSON RPC version incorrect")
-	assert.Equal("history.get", request.Action, "Actions do not match")
+	assert.Equal("history.get", request.Method, "Methods do not match")
 	assert.Equal("", request.Auth, "Auth should be empty")
 
 	decodedParams := request.Params

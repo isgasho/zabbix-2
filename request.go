@@ -2,8 +2,8 @@ package zabbix
 
 type Request struct {
 	JsonRPC string                 `json:"jsonrpc"`
-	Action  string                 `json:"action"`
+	Method  string                 `json:"method"`
 	Params  map[string]interface{} `json:"params"`
-	Auth    string                 `json:"auth"`
+	Auth    string                 `json:"auth,omitempty"`
 	ID      uint                   `json:"id"`
 }

@@ -42,12 +42,12 @@ func NewAPI(url string) *API {
 // and error during processing the parameters, for example, `error
 // parsing JSON`. For API specific errors, check the error object
 // as a part of the response
-func (a *API) Request(action string, params map[string]interface{}) (*Response, error) {
+func (a *API) Request(method string, params map[string]interface{}) (*Response, error) {
 	request := Request{
 		Auth:    a.AuthToken,
 		ID:      1,
 		JsonRPC: RPCVersion,
-		Action:  action,
+		Method:  method,
 		Params:  params,
 	}
 
@@ -94,6 +94,10 @@ func (a *API) Auth(username, password string) error {
 
 	if err != nil {
 		return err
+	}
+
+	if res.IsError() {
+		return &res.Error
 	}
 
 	tok, ok := res.Result.(string)

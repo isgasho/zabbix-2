@@ -10,7 +10,7 @@ type Response struct {
 
 // IsError returns if the response failed
 func (r *Response) IsError() bool {
-	if r.Error.Error() != "" {
+	if r.Error.Error() != "0: " {
 		return true
 	}
 
